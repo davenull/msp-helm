@@ -1,0 +1,15 @@
+{{- range .Values.mayastor_pools }}
+---
+# Source: mayastor/templates/pool.yaml
+apiVersion: "openebs.io/v1alpha1"
+kind: MayastorPool
+metadata:
+  # Name can be anything as long as it is unique
+  name: {{ .nodeName | trim }}-{{ splitList "/" .disk | last | trim}}
+  namespace: {{ $.Release.namespace }}
+spec:
+  node: {{ .nodeName | trim }}
+  # Currently only one disk device is supported per pool (e.g. /dev/nvme1n1)
+  # supported formats: linux device path, /dev/disk/by-id/
+  disks: [{{ .disk | trim | quote }}]
+{{- end }}
